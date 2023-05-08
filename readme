@@ -1,0 +1,81 @@
+node 설명
+
+차량제어 노드
+erp42_com
+1. 개략적인 설명
+- 본 노드는 erp42의 시리얼 프로토콜 메세지를 주어 차량과 시리얼 통신을 가능하게 하는 프로그램이다.
+2. 메세지 설명
+- 퍼블리셔로는 Evelocity.msg, Float64.msg(std_msgs)메세지를 사용한다.
+두 메세지 모두 erp42에 내장 되어 있는 엔코더를 통해 계산된 차량의 속도(m/s)를 출력한다.
+Float64.msg는 erp42의 pid 제어를 위한 state 정보를 pid패키지에 보내는 용도이다 (topic : /state)
+Evelocity.msg는 Float64.msg와 데이터는 동일한데, 다른 프로그램에서 차량의 속도를 참조하기위한 용도이다.
+- 서브스크라이버로는 ESerial.msg 메세지를 사용한다.
+ESerial.msg는 gear, speed, steer, brake, shutdown으로 구성되어 있다. 
+gear,speed,steer,brake의 데이터 범위는 erp42의 시리얼 프로토콜의 값 범위와 동일하게 세팅이 되어있다.
+shutdown은 향후 비상 정지와 같은 기능을 넣을때 사용한다.
+
+
+
+pid_erp42
+- 의존 패키지
+http://wiki.ros.org/pid
+1. 개략적인 설명
+- 본 노드는 erp42의 제어를 위해 속도(m/s) 및 각도(degree) 데이터를 erp42의 시리얼 프로토콜에 맞추어 변환하는 프로그램이다. 
+또한 pid패키지에 input data와 output data를 송수신을 하여, pid제어값(output)을 erp42_com으로 보내준다.
+- 서브스크라이버로는 setPID.msg 메세지를 사용한다.
+setPID.msg는 경로 추종 알고리즘과 같은 프로그램에서 받아온 속도 및 각도 데이터이다.
+- 퍼블리셔로는 ESerial.msg, Float64.msg(std_msgs)메세지를 사용한다.
+Float64.msg는 받아온 속도 및 각도 데이터를 pid패키지에 /setpoint를 보내 주기 위해 사용한다.
+- 각도 데이터에대한 pid는 아직 지원 하지 않지만, gps 및 imu, 센서로부터 받은 데이터를 지도(map data)에 참조하여 계산하는 방법으로 차량의 절대적인 각도(state)를 구할 수 있을 경우 지원 할 예정이다.
+
+---
+
+차량 명령 joystic 테스트 코드
+
+joy_direct_erp42
+- 의존 패키지
+http://wiki.ros.org/joy
+1. 개략적인 설명
+조이스틱을 이용하여 pid제어 없이 다이렉트로 차량의 제어 하기위한 노드
+LB이 전진, RB이 후진 버튼이며 해당 버튼은 누른 상태로 좌측 조이스틱을 위로 움직여야 차량이 전진 및 후진이 가능하다. 우측 조이스틱 아래는 브레이크이다. 
+스티어링은 오른쪽 조이스틱을 좌우로 움직여 제어한다.
+ 
+
+
+joy_pid_erp42
+- 의존 패키지
+http://wiki.ros.org/joy
+1. 개략적인 설명
+조이스틱을 이용하여 pid제어를 위해 조이스틱으로 차량속도 및 각도 setpoint를 정하는 노드이다.
+
+------------------------------------
+
+
+사용방법
+
+차량 제어
+1. pid를 사용할 경우
+pid_erp42, erp42_com, velocity_erp42_control.launch(의존성 패키지 pid)실행
+2. pid를 사용 안 할 경우
+erp42_com 실행
+
+
+
+차량 명령 joystic 테스트 코드
+1. pid를 사용할 경우
+joy_node(의존성 패키지 joy), joy_pid_erp42
+2. pid를 사용 안 할 경우
+joy_node(의존성 패키지 joy), joy_direct_erp42
+
+
+
+
+
+
+
+
+
+
+
+
+

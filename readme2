@@ -1,0 +1,28 @@
+    b - signed char (integer)
+    B - unsigned char (integer)
+    h - short (integer)
+    H - unsigned short (integer)
+    i - int (integer)
+    I - unsigned int (integer)
+    q - long long (integer)
+    Q - unsigned long long (integer)
+    f - float
+    d - double
+    s - char[] (string)
+    p - char[] (string, padded with null bytes)
+    x - pad byte (no data)
+    ? - _Bool (boolean, stored as a byte)    
+    
+    
+    
+    
+    
+    
+    '3B': Three unsigned bytes for the STX header.
+    'B B B': Three unsigned bytes for AorM, ESTOP, and GEAR.
+    'h h h h': Four signed short integers (16 bits) for SPEED and STEER.
+    'B': One unsigned byte for BRAKE.
+    'B B': Two unsigned bytes for the ALIVE counter.
+    '2B': Two unsigned bytes for the ETX footer.
+    
+    

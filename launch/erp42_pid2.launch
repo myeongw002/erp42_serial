@@ -1,0 +1,12 @@
+<launch>
+  
+  <include file="$(find pid)/launch/pid_erp42_control2.launch">
+  </include>
+  
+  <node pkg="erp42_serial" type="pid_erp42.py" name="pid_erp42" />
+  
+  <!--group ns="Serial_communicate"-->
+  <node pkg="erp42_serial" type="erp42_serial_test.py" name="erp42_serial_test" output="screen"/>
+  <!--/group-->
+  
+</launch>
